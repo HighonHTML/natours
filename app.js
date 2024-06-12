@@ -15,15 +15,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// mounting a new router on a routes
-
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 
-// server
-
-const port = 8000;
-
-app.listen(port, () => {
-  console.log(`app running on port ${port}`);
-});
+module.exports = app
