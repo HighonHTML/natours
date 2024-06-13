@@ -4,17 +4,29 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, "utf-8")
 );
 
+exports.checkBody = (req, res, next) => {
+  if (!("name" in req.body && "price" in req.body)) {
+    return res.status(400).json({
+      status: "bad request ",
+      message: "required properties are missing",
+    });
+  }
+  next();
+};
+
 exports.checkId = (req, res, next, val) => {
   if (val > tours.length) {
+    console.log("invalid");
     return res.status(404).json({
       status: "failure",
       message: "invalid ID",
     });
   }
-  next()
+  next();
 };
 
 exports.getAllTours = (req, res) => {
+  console.log("getting");
   res.status(200).json({
     status: "success",
     data: {
@@ -45,7 +57,7 @@ exports.createTour = (req, res) => {
   const newTour = Object.assign({ id: newId }, req.body);
   tours.push(newTour);
   fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
+    `${__dirname}/../dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
     (err) => {
       res.status(201).json({
